@@ -259,3 +259,13 @@ async function test_one(url, expected) {
 //test_one("https://www.tbrc.org/#!rid=O1GS12980|O1GS129802KG218875$W22084") // doesn't exist anymore on BUDA
 //test_one("https://www.tbrc.org/#!specials/prints/wmdl01")
 //test_one("https://www.tbrc.org/#!specials/catalogViews/category/10-tha")
+//test_one("https://www.tbrc.org/#library_work_ViewByOutline-O1GS129802KG218864|W22084") // doesn't exist
+//test_one("https://www.tbrc.org/#library_work_ViewByOutline-O01CT00424CZ206477|W12827") // doesn't exist
+//test_one("https://www.tbrc.org/#library_work_ViewInWIndow-W22084|0888|3|1|1|588")
+
+async function redirect() {
+	res = await getRedirectUrl(window.location)
+	window.location.replace(res)
+}
+
+redirect()
