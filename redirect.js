@@ -219,7 +219,7 @@ async function getRedirectUrl(location) {
 			else if (mapped == "legacy")
 				return urlstring.replace(/[^/]*tbrc\.org/, "legacy.tbrc.org")
 			else 
-				return addLang(mapped, lang, mapped.includes('?'))
+				return addLang(mapped, lang, !mapped.includes('?'))
 		} else if (hash.startsWith("place/") || hash.startsWith("specials/selected/")) {
 			return urlstring.replace(/[^/]*tbrc\.org/, "legacy.tbrc.org")
 		} else if (hash.startsWith("rid=")) {
@@ -260,7 +260,7 @@ async function test_one(url, expected) {
 //test_one("https://www.tbrc.org/#!specials/prints/wmdl01")
 //test_one("https://www.tbrc.org/#!specials/catalogViews/category/10-tha")
 //test_one("https://www.tbrc.org/#library_work_ViewByOutline-O1GS129802KG218864|W22084") // doesn't exist
-//test_one("https://www.tbrc.org/#library_work_ViewByOutline-O01CT00424CZ206477|W12827") // doesn't exist
+//test_one("https://www.tbrc.org/#library_work_ViewByOutline-O01CT00424CZ206477|W12827") // does exist
 //test_one("https://www.tbrc.org/#library_work_ViewInWIndow-W22084|0888|3|1|1|588")
 
 async function redirect() {
