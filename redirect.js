@@ -232,6 +232,14 @@ async function getRedirectUrl(location) {
 	}
 	if (params.RID)
 		return redirectRID(params.RID, "simple", lang)
+    if (location.pathname.startsWith("/eBooks")) {
+    	const filename = location.pathname.split("/")[2]
+    	const filenameparts = filename.split("-")
+    	let iglname = filenameparts[1]
+    	if (!iglname.startsWith("I"))
+    		iglname = "I"+iglname
+        return "https://iiif.bdrc.io/download/pdf/v:bdr:"+iglname+"::"+filenameparts[2]+"-"+filenameparts[3]
+    }
 	return urlstring.replace(/[^/]*tbrc\.org/, "legacy.tbrc.org")
 }
 
@@ -245,6 +253,8 @@ async function test_one(url, expected) {
 	res = await getRedirectUrl(urlobj)
 	if (res != expected) {
 		console.error(url+" -> "+res+" instead of "+expected)
+	} else {
+		console.log("OK: "+url+" -> "+res)
 	}
 }
 
@@ -262,6 +272,8 @@ async function test_one(url, expected) {
 //test_one("https://www.tbrc.org/#library_work_ViewByOutline-O1GS129802KG218864|W22084") // doesn't exist
 //test_one("https://www.tbrc.org/#library_work_ViewByOutline-O01CT00424CZ206477|W12827") // does exist
 //test_one("https://www.tbrc.org/#library_work_ViewInWIndow-W22084|0888|3|1|1|588")
+//test_one("https://www.tbrc.org/eBooks/W22084-0886-3-4-abs.pdf", "https://iiif.bdrc.io/download/pdf/v:bdr:I0886::3-4")
+//test_one("https://www.tbrc.org/eBooks/W22084-0886-1-624-any.pdf", "https://iiif.bdrc.io/download/pdf/v:bdr:I0886::1-624")
 
 async function redirect() {
 	res = await getRedirectUrl(window.location)
