@@ -172,8 +172,16 @@ async function redirectRID(rid, style, lang) {
 	// simple style: O1GS12980|O1GS129802KG218862$W22084
 	// ViewByOutline style: O1GS129802KG218864|W22084
 	// ViewInWIndow style: W22084|0888|3|1|1|588
-	if (style == "simple" && !rid.includes("$") && !rid.includes("|"))
+	if (style == "simple" && !rid.includes("$") && !rid.includes("|")) {
+		// potential issue with:
+		// - conceptual works that should be redirected to a BUDA work
+		// - etext in W works that have been changed to IE records
+		// both have their W RIDs redirected on BUDA, but not the MW,
+		// perhaps we should?
+		if (rid.startsWith("W"))
+			rid = "M"+rid
 		return addLang("https://library.bdrc.io/show/bdr:"+rid, lang, true)
+	}
 	if (style == "simple") {
 		dollarparts = rid.split('$')
 		mainrid = dollarparts[1]
@@ -187,10 +195,11 @@ async function redirectRID(rid, style, lang) {
 		// ViewInWindow
 		barparts = rid.split("|")
 		// here we take the RID of the image group
-		mainrid = barparts[1]
-		if (!mainrid.startsWith("I"))
-			mainrid = "I"+mainrid
-		return addLang("https://library.bdrc.io/show/bdr:"+mainrid, lang, true)+"#open-viewer" 
+		vollname = barparts[1]
+		if (!vollname.startsWith("I"))
+			vollname = "I"+vollname
+		wlname = barparts[0]
+		return addLang("https://library.bdrc.io/show/bdr:M"+wlname, lang, true)+"#open-viewer" 
 	}
 	instanceQname = await instanceQnameFromOutlineNode(noderid)
 	if (!instanceQname)
@@ -227,7 +236,7 @@ async function getRedirectUrl(location) {
 		} else if (hash.startsWith("library_work_ViewByOutline-")) {
 			return redirectRID(hash.substring(27), "ViewByOutline", lang)
 		} else if (hash.startsWith("library_work_ViewInWIndow-")) {
-			return redirectRID(hash.substring(27), "ViewInWIndow", lang)
+			return redirectRID(hash.substring(26), "ViewInWIndow", lang)
 		}
 	}
 	if (params.RID)
@@ -236,10 +245,14 @@ async function getRedirectUrl(location) {
     	const filename = location.pathname.split("/")[2]
     	const filenameparts = filename.split("-")
     	let iglname = filenameparts[1]
+    	let wlname = filenameparts[0]
     	if (!iglname.startsWith("I"))
     		iglname = "I"+iglname
-        return "https://iiif.bdrc.io/download/pdf/v:bdr:"+iglname+"::"+filenameparts[2]+"-"+filenameparts[3]
+        //return "https://iiif.bdrc.io/download/pdf/v:bdr:"+iglname+"::"+filenameparts[2]+"-"+filenameparts[3]
+        return addLang("https://library.bdrc.io/show/bdr:M"+wlname, lang, true)
     }
+    if (location.pathname == "/")
+    	return addLang("https://library.bdrc.io", lang, true)
 	return urlstring.replace(/[^/]*tbrc\.org/, "legacy.tbrc.org")
 }
 
@@ -259,21 +272,26 @@ async function test_one(url, expected) {
 }
 
 //test_this()
-//test_one("https://www.tbrc.org/#!rid=W22084")
-//test_one("https://www.tbrc.org/#rid=W22084")
-//test_one("https://tbrc.org/link?RID=W12827")
-//test_one("https://tbrc.org/?locale=zh#!etexts/ocr")
-//test_one("https://tbrc.org/?locale=zh#!footer/news/20140915")
-//test_one("https://tbrc.org/foobar")
-//test_one("https://www.tbrc.org/#!rid=O01CT0042|O01CT00424CZ206477$W12827") // exists
-//test_one("https://www.tbrc.org/#!rid=O1GS12980|O1GS129802KG218875$W22084") // doesn't exist anymore on BUDA
-//test_one("https://www.tbrc.org/#!specials/prints/wmdl01")
-//test_one("https://www.tbrc.org/#!specials/catalogViews/category/10-tha")
-//test_one("https://www.tbrc.org/#library_work_ViewByOutline-O1GS129802KG218864|W22084") // doesn't exist
-//test_one("https://www.tbrc.org/#library_work_ViewByOutline-O01CT00424CZ206477|W12827") // does exist
-//test_one("https://www.tbrc.org/#library_work_ViewInWIndow-W22084|0888|3|1|1|588")
-//test_one("https://www.tbrc.org/eBooks/W22084-0886-3-4-abs.pdf", "https://iiif.bdrc.io/download/pdf/v:bdr:I0886::3-4")
-//test_one("https://www.tbrc.org/eBooks/W22084-0886-1-624-any.pdf", "https://iiif.bdrc.io/download/pdf/v:bdr:I0886::1-624")
+/*
+test_one("https://www.tbrc.org/#!rid=W22084")
+test_one("https://www.tbrc.org/#rid=W22084")
+test_one("https://www.tbrc.org/#rid=P123")
+test_one("https://www.tbrc.org/link?RID=W12827")
+test_one("https://www.tbrc.org/?locale=zh#!etexts/ocr")
+test_one("https://www.tbrc.org/?locale=zh#!footer/news/20140915")
+test_one("https://www.tbrc.org/")
+test_one("https://www.tbrc.org/?locale=zh")
+test_one("https://www.tbrc.org/foobar")
+test_one("https://www.tbrc.org/#!rid=O01CT0042|O01CT00424CZ206477$W12827") // exists
+test_one("https://www.tbrc.org/#!rid=O1GS12980|O1GS129802KG218875$W22084") // doesn't exist anymore on BUDA
+test_one("https://www.tbrc.org/#!specials/prints/wmdl01")
+test_one("https://www.tbrc.org/#!specials/catalogViews/category/10-tha")
+test_one("https://www.tbrc.org/#library_work_ViewByOutline-O1GS129802KG218864|W22084") // doesn't exist
+test_one("https://www.tbrc.org/#library_work_ViewByOutline-O01CT00424CZ206477|W12827") // does exist
+test_one("https://www.tbrc.org/#library_work_ViewInWIndow-W22084|0888|3|1|1|588")
+test_one("https://www.tbrc.org/eBooks/W22084-0886-3-4-abs.pdf", "https://iiif.bdrc.io/download/pdf/v:bdr:I0886::3-4")
+test_one("https://www.tbrc.org/eBooks/W22084-0886-1-624-any.pdf", "https://iiif.bdrc.io/download/pdf/v:bdr:I0886::1-624")
+*/
 
 async function redirect() {
 	res = await getRedirectUrl(window.location)
