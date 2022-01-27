@@ -237,6 +237,12 @@ async function getRedirectUrl(location) {
 			return redirectRID(hash.substring(27), "ViewByOutline", lang)
 		} else if (hash.startsWith("library_work_ViewInWIndow-")) {
 			return redirectRID(hash.substring(26), "ViewInWIndow", lang)
+		} else if (hash.startsWith("library_work_Object-")) {
+			return redirectRID(hash.substring(20), "simple", lang)
+		} else if (hash.startsWith("library_person_Object-")) {
+			return redirectRID(hash.substring(22), "simple", lang)
+		} else if (hash.startsWith("library_place_Object-")) {
+			return redirectRID(hash.substring(21), "simple", lang)
 		}
 	}
 	if (params.RID)
@@ -291,6 +297,8 @@ test_one("https://www.tbrc.org/#library_work_ViewByOutline-O01CT00424CZ206477|W1
 test_one("https://www.tbrc.org/#library_work_ViewInWIndow-W22084|0888|3|1|1|588")
 test_one("https://www.tbrc.org/eBooks/W22084-0886-3-4-abs.pdf", "https://iiif.bdrc.io/download/pdf/v:bdr:I0886::3-4")
 test_one("https://www.tbrc.org/eBooks/W22084-0886-1-624-any.pdf", "https://iiif.bdrc.io/download/pdf/v:bdr:I0886::1-624")
+test_one("http://tbrc.org/#library_work_Object-W15098")
+test_one("http://tbrc.org/#library_person_Object-P7894")
 */
 
 async function redirect() {

@@ -14,8 +14,16 @@ html page that redirects URLs from tbrc.org to bdrc.io
 - `#library_work_ViewByOutline-O1GS129802KG218864|W22084`
 - `#library_work_ViewInWIndow-W22084|0888|3|1|1|588`
 - `public?module=xxx` -> legacy
-- `browser/ImageService?work=W22084&igroup=0886&image=1&first=1&last=624&fetchimg=yes`
-- `eBooks/W22084-0886-3-4-abs.pdf`
+- `browser/ImageService?work=W22084&igroup=0886&image=1&first=1&last=624&fetchimg=yes` -> https://iiif.bdrc.io/igsi:bdr:I0886::1/full/max/0/default.jpg
+- `eBooks/W22084-0886-3-4-abs.pdf` -> https://iiif.bdrc.io/download/pdf/v:bdr:0886::3-4
+- `eBooks/W22084-0886-1-624-any.pdf` -> https://iiif.bdrc.io/download/pdf/v:bdr:0886::1-624
+- scan-requests/ -> legacy
+
+#### old patterns
+
+- http://tbrc.org/#library_work_Object-W15098
+- http://tbrc.org/#!rid=O2MS16391%7CO2MS163914CZ7711$W1PD95844
+- http://tbrc.org/#library_person_Object-P7894
 
 #### catalog pages
 
@@ -39,6 +47,13 @@ html page that redirects URLs from tbrc.org to bdrc.io
 - `#!specials/third/nlm00` -> PR1NLM00
 - fpl01 -> PR1FPL01
 - etc. (pattern is PR1+uppercase)
+- eap1150
+- ngmpp00
+- pemakod00
+- tibet00
+- lokesh01
+- cihts00
+- vienna00
 - https://www.tbrc.org/#!specials/core -> https://library.bdrc.io/search?q=%22core%22&lg=en&t=Product&s=title
 - #!specials/core/ctc01 -> PRHD01
 - ctc02 -> PRHD02
