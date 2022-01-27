@@ -172,6 +172,7 @@ async function redirectRID(rid, style, lang) {
 	// simple style: O1GS12980|O1GS129802KG218862$W22084
 	// ViewByOutline style: O1GS129802KG218864|W22084
 	// ViewInWIndow style: W22084|0888|3|1|1|588
+	rid = rid.replace("%7C", "|")
 	if (style == "simple" && !rid.includes("$") && !rid.includes("|")) {
 		// potential issue with:
 		// - conceptual works that should be redirected to a BUDA work
@@ -299,7 +300,10 @@ test_one("https://www.tbrc.org/eBooks/W22084-0886-3-4-abs.pdf", "https://iiif.bd
 test_one("https://www.tbrc.org/eBooks/W22084-0886-1-624-any.pdf", "https://iiif.bdrc.io/download/pdf/v:bdr:I0886::1-624")
 test_one("http://tbrc.org/#library_work_Object-W15098")
 test_one("http://tbrc.org/#library_person_Object-P7894")
+test_one("http://tbrc.org/#!rid=O2MS16391%7CO2MS163914CZ7711$W1PD95844") // doesn't exist
+test_one("https://www.tbrc.org/#!rid=O01CT0042%7CO01CT00424CZ206477$W12827")
 */
+
 
 async function redirect() {
 	res = await getRedirectUrl(window.location)
