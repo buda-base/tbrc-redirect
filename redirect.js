@@ -248,6 +248,8 @@ async function getRedirectUrl(location) {
 	}
 	if (params.RID)
 		return redirectRID(params.RID, "simple", lang)
+	if (params.rid)
+		return redirectRID(params.rid, "simple", lang)
     if (location.pathname.startsWith("/eBooks")) {
     	const filename = location.pathname.split("/")[2]
     	const filenameparts = filename.split("-")
@@ -302,8 +304,8 @@ test_one("http://tbrc.org/#library_work_Object-W15098")
 test_one("http://tbrc.org/#library_person_Object-P7894")
 test_one("http://tbrc.org/#!rid=O2MS16391%7CO2MS163914CZ7711$W1PD95844") // doesn't exist
 test_one("https://www.tbrc.org/#!rid=O01CT0042%7CO01CT00424CZ206477$W12827")
+test_one("https://www.tbrc.org/link?rid=W12827")
 */
-
 
 async function redirect() {
 	res = await getRedirectUrl(window.location)
